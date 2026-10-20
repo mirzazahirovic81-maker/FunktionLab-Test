@@ -13,6 +13,7 @@ button,input,select{font:inherit}button{cursor:pointer;border:0;border-radius:10
 details.advanced{margin-top:15px;border:1px solid #dfe8ed;border-radius:11px;padding:13px}details.advanced summary{cursor:pointer;font-weight:700}details.advanced p{font-size:13px}
 footer{font-size:12px;color:#8295a2;margin-top:30px}#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#173047;color:white;padding:11px 18px;border-radius:10px;display:none;z-index:4}
 .lab-panel{border:1px solid #b9dce3;background:linear-gradient(145deg,#fff 0%,#f6fbfd 100%);padding:26px}.lab-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:22px}.lab-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(290px,.85fr);gap:20px}.lab-controls{border:1px solid #dce8ed;border-radius:16px;background:white;padding:20px}.lab-caption{font-size:11px;letter-spacing:.11em;color:#638195;font-weight:850;margin-bottom:10px}.lab-measures{display:flex;flex-wrap:wrap;gap:7px}.lab-chip{font-size:12px;padding:8px 10px;border:1px solid #d9e4e9;background:#f5f8fa;border-radius:20px;color:#537080;display:inline-flex;align-items:center;gap:5px}.lab-chip.active{background:#e1f6f3;border-color:#8dd3c9;color:#116c64}.lab-chip b{font-size:13px}.lever{margin-top:18px}.lever-label{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:700;gap:8px}.lever-label output{font-variant-numeric:tabular-nums;color:#087f98;background:#e8f6f8;border-radius:7px;padding:4px 8px}.lever input[type=range]{display:block;width:100%;accent-color:#0795aa;margin:11px 0 4px;cursor:pointer}.lever-ends{display:flex;justify-content:space-between;gap:6px;color:#8aa0ad;font-size:10px}.lab-result{background:linear-gradient(155deg,#11374e,#0d283c);border-radius:17px;padding:23px;color:#fff;align-self:start;position:sticky;top:14px;box-shadow:0 14px 32px #1730471b}.result-eyebrow{font-size:11px;letter-spacing:.1em;font-weight:750;color:#8fbcc9;display:flex;justify-content:space-between;gap:10px;margin-bottom:20px}.result-main{margin-bottom:18px}.result-main span{font-size:12px;color:#a8c8d2;display:block}.result-main strong{font-size:clamp(23px,3vw,30px);display:block;margin-top:4px;letter-spacing:-.04em;font-variant-numeric:tabular-nums}.result-line{border-top:1px solid #ffffff20;padding:12px 0;display:flex;justify-content:space-between;gap:10px;font-size:12px;color:#bcd1da}.result-line b{color:white;font-size:15px;font-variant-numeric:tabular-nums}.lab-status{background:#e4b15b;color:#233340;border-radius:9px;padding:11px 12px;font-weight:850;margin:12px 0}.lab-status.pass{background:#65d3b9}.meter{height:10px;border-radius:20px;background:#315064;position:relative;margin-top:16px;overflow:visible}.meter>div{height:100%;background:#60cdb6;border-radius:20px;width:0%;transition:width .15s}.meter i{position:absolute;top:-4px;height:18px;width:2px;background:white;left:24%}.meter-label{display:flex;justify-content:space-between;font-size:10px;color:#9ab6c2;margin-top:7px;gap:8px}.lab-explain{color:#d5e6e9;font-size:12px;margin-top:16px}.lab-foot{border-top:1px solid #ffffff25;padding-top:15px;margin-top:16px;font-size:11px;line-height:1.6;color:#9ab6c2}.lab-foot strong{color:#d2e9ee}
+.lab-action-list{display:grid;gap:8px}.lab-action{border:1px solid #d9e7e9;border-radius:12px;padding:10px;background:#fff}.lab-action-head{display:flex;gap:9px;align-items:center}.lab-action-head input{width:19px;height:19px;accent-color:#078d9d;flex-shrink:0}.lab-action-head label{flex:1;font-size:13px;font-weight:700;line-height:1.35}.lab-action-head button{font-size:12px;padding:7px 9px}.lab-action-detail{padding:8px 4px 3px 27px}.lab-action-detail .lever{margin-top:11px}.lab-action-detail .lever-label{font-size:12px}.lab-action-detail .lever-ends{font-size:10px}.lab-action-detail input[type=range]{touch-action:pan-y}.lab-mini{font-size:11px;color:#668394;margin:4px 0 0 27px}.lab-budget-bad{color:#ffd7b8!important}.lab-budget-good{color:#a4f0d9!important}
 @media(max-width:750px){.lab-layout{grid-template-columns:1fr}.lab-result{position:static}.lab-top{flex-wrap:wrap}.lab-panel{padding:16px}}
 @media(max-width:650px){main{padding:16px 12px 60px}header{align-items:flex-start;flex-direction:column}.panel{padding:16px}.metrics{grid-template-columns:1fr 1fr}.metric:last-child{grid-column:1/-1}.fieldgrid{grid-template-columns:1fr 1fr}.measure{grid-template-columns:22px minmax(0,1fr) auto;gap:7px}.pill{display:inline-block;margin:5px 0 0}.summary-row{font-size:12px}.bar select{flex:1}}
 @media print{body{background:white}header button,.top-actions,.bar,.edit,.add,button,.details,details.advanced{display:none!important}.panel{box-shadow:none;break-inside:avoid}main{padding:0}.intro{margin-bottom:10px}}
@@ -29,26 +30,30 @@ footer{font-size:12px;color:#8295a2;margin-top:30px}#toast{position:fixed;bottom
 <div id="warning" class="note"></div>
 <details class="advanced"><summary>Fördjupning: nuvärde</summary><p>En förenklad nuvärdeskalkyl som tar hänsyn till varje åtgärds livslängd. Detta är <strong>inte</strong> en verifierad Totalmetodikkalkyl.</p><label class="muted">Kalkylränta (%) <input id="rate" type="number" min="0" max="30" step="0.5" value="5" style="width:90px;margin-left:8px"></label><div class="summary-row"><span>Summa av enskilda nuvärden</span><span id="npv"></span></div><p>Beräkningen antar konstanta årliga besparingar och tar inte hänsyn till reinvesteringar, restvärden eller åtgärdernas samverkan.</p></details>
 </section>
-<section class="panel lab-panel" id="lab"><div class="lab-top"><div><span class="step">INTERAKTIV ÅTGÄRDSLABB</span><h2>Bygg ditt lönsamma paket</h2><p>Slå av och på åtgärder. Dra i reglagen och se direkt hur hela paketets ekonomi förändras.</p></div><button class="secondary small" id="labReset">↻ Nollställ reglagen</button></div>
+<section class="panel lab-panel" id="lab">
+<div class="lab-top"><div><span class="step">INTERAKTIV ÅTGÄRDSLABB</span><h2>Experimentera med riktiga åtgärder</h2><p>Välj vilka åtgärder som ska ingå, justera varje åtgärds investering och besparing och se om paketet ryms inom budgeten och klarar avkastningskravet.</p></div><button id="labReset" class="secondary small">↻ Återställ experiment</button></div>
 <div class="lab-layout"><div class="lab-controls">
-<div class="lab-caption">KOMBINERA ÅTGÄRDER</div><div id="labMeasures" class="lab-measures"></div>
-<div class="lab-caption" style="margin-top:20px">EXPERIMENTERA MED ANTAGANDEN</div>
-<div class="lever"><div class="lever-label"><label for="investSlider">Investeringskostnad</label><output id="investValue">100 %</output></div><input id="investSlider" type="range" min="50" max="150" step="5" value="100"><div class="lever-ends"><span>−50 %</span><span>Grundvärde</span><span>+50 %</span></div></div>
-<div class="lever"><div class="lever-label"><label for="savingSlider">Årlig besparing</label><output id="savingValue">100 %</output></div><input id="savingSlider" type="range" min="50" max="150" step="5" value="100"><div class="lever-ends"><span>−50 %</span><span>Grundvärde</span><span>+50 %</span></div></div>
-<div class="lever"><div class="lever-label"><label for="overlapSlider">Överlapp mellan åtgärder</label><output id="overlapValue">0 %</output></div><input id="overlapSlider" type="range" min="0" max="40" step="1" value="0"><div class="lever-ends"><span>Ingen reduktion</span><span>40 % lägre besparing</span></div></div>
+<div class="lab-caption">1. VÄLJ OCH JUSTERA ÅTGÄRDER</div>
+<div id="labMeasures" class="lab-action-list"></div>
+<div class="lab-caption" style="margin-top:22px">2. SÄTT RAMARNA FÖR DITT BESLUT</div>
+<div class="lever"><div class="lever-label"><label for="budgetSlider">Investeringsbudget</label><output id="budgetValue">500 000 kr</output></div><input id="budgetSlider" type="range" min="0" max="1500000" step="25000" value="500000"><div class="lever-ends"><span>0 kr</span><span>1 500 000 kr</span></div></div>
+<div class="lever"><div class="lever-label"><label for="overlapSlider">Reduktion för överlapp</label><output id="overlapValue">0 %</output></div><input id="overlapSlider" type="range" min="0" max="40" step="1" value="0"><div class="lever-ends"><span>Ingen</span><span>40 % lägre besparing</span></div></div>
 <div class="lever"><div class="lever-label"><label for="hurdleSlider">Avkastningskrav</label><output id="hurdleValue">6 %</output></div><input id="hurdleSlider" type="range" min="0" max="20" step="0.5" value="6"><div class="lever-ends"><span>0 %</span><span>20 %</span></div></div>
 <div class="lever"><div class="lever-label"><label for="periodSlider">Kalkylperiod</label><output id="periodValue">15 år</output></div><input id="periodSlider" type="range" min="5" max="35" step="1" value="15"><div class="lever-ends"><span>5 år</span><span>35 år</span></div></div>
 </div>
 <div class="lab-result"><div class="result-eyebrow">DITT ÅTGÄRDSPAKET <span id="labCount">0 åtgärder</span></div>
-<div class="result-main"><span>Investering totalt</span><strong id="labCost">–</strong></div><div class="result-main"><span>Justerad årlig besparing</span><strong id="labSaving">–</strong></div>
+<div class="result-main"><span>Investering totalt</span><strong id="labCost">–</strong></div>
+<div class="result-main"><span>Årlig besparing efter överlapp</span><strong id="labSaving">–</strong></div>
 <div class="result-line"><span>Enkel återbetalning</span><b id="labPayback">–</b></div>
 <div class="result-line"><span>Internränta, hela paketet</span><b id="irr">–</b></div>
+<div class="result-line"><span>Nuvärde vid avkastningskravet</span><b id="labNpv">–</b></div>
 <div class="result-line"><span>Avkastningskrav</span><b id="hurdleResult">–</b></div>
 <div class="lab-status" id="verdict">–</div>
+<p id="budgetStatus" class="lab-explain"></p>
 <div class="meter"><div id="returnMeter"></div><i id="hurdleMarker"></i></div><div class="meter-label"><span>0 %</span><span>Internränta jämfört med krav</span><span>25 %+</span></div>
 <p id="totalNote" class="lab-explain"></p>
-<div class="lab-foot">Förenklad paketkalkyl inspirerad av <strong>Beloks Totalmetodik</strong>. Alla åtgärder antas ge samma årliga nettobesparing under vald kalkylperiod. Reglagen är scenarier, inte verifierade besparingar.</div></div></div>
-<details class="advanced"><summary>Så fungerar beräkningen och dess begränsningar</summary><p>Internräntan beräknas för paketets justerade investering och årliga besparing över vald kalkylperiod. Överlappsreglaget reducerar paketbesparingen med vald procentandel. Det är en förenklad scenarioanalys, inte en fullständig Totalmetodikkalkyl: verkliga beroenden mellan åtgärder, skilda livslängder, återinvesteringar, restvärden och energiprisutveckling ingår inte. Kontrollera resultatet mot energiutredningen innan beslut.</p></details>
+<div class="lab-foot">Förenklad paketkalkyl inspirerad av <strong>Beloks Totalmetodik</strong>. Experimentet bygger på dina antaganden och tar inte automatiskt hänsyn till tekniska beroenden, reinvesteringar eller olika livslängder.</div></div></div>
+<details class="advanced"><summary>Så fungerar experimentet</summary><p>Varje vald åtgärd kan öppnas och justeras med två reglage: investering och årlig besparing, från 50 till 150 procent av åtgärdens grundvärde. Reglagen ändrar inte originaluppgifterna i åtgärdslistan. Överlappsreglaget reducerar den sammanlagda besparingen. Internräntan och nuvärdet räknas för hela paketet under vald kalkylperiod med en konstant årlig besparing. Detta är inte en fullständig Totalmetodikkalkyl.</p></details>
 </section>
 <section class="panel"><span class="step">STEG 3</span><h2>Ta med resultatet</h2><p class="muted">En enkel sammanställning av åtgärdspaketet, redo att diskutera eller komplettera inför beslut.</p><div id="summary"></div><div class="bar"><button id="copy" class="primary">Kopiera sammanställning</button><button id="print" class="secondary">Skriv ut / Spara som PDF</button></div></section>
 <footer>FunktionLab · Exempeldata är fiktiva. Resultatet är ett översiktligt beslutsstöd och ersätter inte en teknisk eller ekonomisk verifiering.</footer>
@@ -75,11 +80,11 @@ const library=[
 ["Installera solceller","Energiförsörjning"],["Installera värmepump","Energiförsörjning"],["Återvinn spillvärme","Energiförsörjning"]
 ];
 const $=id=>document.getElementById(id),fmt=n=>Math.round(n).toLocaleString("sv-SE"),money=n=>fmt(n)+" kr";
-let items=[],counter=0,opened=new Set();
+let items=[],counter=0,opened=new Set(),scenario={},labOpen=new Set();
 function item(name,category,cost=0,saving=0,life=15,checked=false,example=false){return {id:++counter,name,category,cost,saving,life,checked,example}}
-function resetLevers(){[["investSlider",100],["savingSlider",100],["overlapSlider",0],["hurdleSlider",6],["periodSlider",15]].forEach(([id,v])=>$(id).value=v)}
+function resetLevers(){[["budgetSlider",500000],["overlapSlider",0],["hurdleSlider",6],["periodSlider",15]].forEach(([id,v])=>$(id).value=v);scenario={};labOpen=new Set()}
 function reset(){counter=0;opened.clear();items=examples.map(x=>item(...x,true,true)).concat(library.map(x=>item(...x)));$("search").value="";$("category").value="";$("rate").value=5;resetLevers();render()}
-function clearAll(){counter=0;opened.clear();items=library.map(x=>item(...x));$("search").value="";$("category").value="";resetLevers();render();toast("Klart för dina egna uppgifter")}
+function clearAll(){counter=0;opened.clear();resetLevers();items=library.map(x=>item(...x));$("search").value="";$("category").value="";resetLevers();render();toast("Klart för dina egna uppgifter")}
 function safe(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function measureHTML(x){return `<div class="measure"><input type="checkbox" data-check="${x.id}" id="m${x.id}" ${x.checked?"checked":""}><label for="m${x.id}"><strong>${safe(x.name)}</strong>${x.example?'<span class="pill">Exempel</span>':""}<div class="meta">${safe(x.category)}${x.cost||x.saving?` · ${money(x.cost)} · ${money(x.saving)}/år`:" · Fyll i värden"}</div></label><button class="edit secondary" data-edit="${x.id}" aria-expanded="${opened.has(x.id)}">Ändra</button></div><div class="details ${opened.has(x.id)?"open":""}" id="detail${x.id}"><div class="fieldgrid"><label>Investering (kr)<input type="number" min="0" data-field="cost" data-id="${x.id}" value="${x.cost}"></label><label>Besparing (kr/år)<input type="number" min="0" data-field="saving" data-id="${x.id}" value="${x.saving}"></label><label>Livslängd (år)<input type="number" min="1" max="80" data-field="life" data-id="${x.id}" value="${x.life}"></label></div></div>`}
 function render(){
@@ -93,47 +98,49 @@ $("chosenMeasures").innerHTML=items.filter(x=>x.checked).length?items.filter(x=>
 $("measures").innerHTML=shown.length?shown.map(x=>measureHTML(x)).join(""):'<div class="empty">Inga fler åtgärder matchar sökningen.</div>';
 renderResults();
 }
-function renderResults(){
-let chosen=items.filter(x=>x.checked),cost=chosen.reduce((s,x)=>s+x.cost,0),saving=chosen.reduce((s,x)=>s+x.saving,0);
-$("totalCost").textContent=money(cost);$("totalSaving").textContent=money(saving)+"/år";$("payback").textContent=saving>0?(cost/saving).toFixed(1).replace(".",",")+" år":"–";
-let cats=new Set(chosen.map(x=>x.category));let overlap=(cats.has("Ventilation")&&cats.has("Värme"))||(cats.has("Klimatskal")&&cats.has("Värme"))||(cats.has("Belysning")&&cats.has("Värme"))||(chosen.filter(x=>x.category==="Ventilation").length>1);
-$("warning").className=overlap?"note":"note success";
-$("warning").textContent=overlap?"* Kontrollera samverkan: valda åtgärder kan påverka samma energianvändning. Grundvärdena nedan är summerade utan korrigering.":"* Grundvärdena summeras från dina uppgifter. Scenarioreglagen påverkar bara Åtgärdslabbet.";
-const rate=Math.max(0,Math.min(30,Number($("rate").value)||0))/100;
-let npv=chosen.reduce((s,x)=>s-x.cost+(rate===0?x.life:(1-Math.pow(1+rate,-x.life))/rate)*x.saving,0);
-$("npv").textContent=money(npv);
-let investFactor=Number($("investSlider").value)/100,savingFactor=Number($("savingSlider").value)/100,overlapFactor=Number($("overlapSlider").value)/100;
-let totalInvestment=cost*investFactor,effective=saving*savingFactor*(1-overlapFactor);
-let period=Number($("periodSlider").value),hurdle=Number($("hurdleSlider").value);
-let annuity=r=>r===0?period:(1-Math.pow(1+r,-period))/r;
+function renderResults(skipActions=false){
+const chosen=items.filter(x=>x.checked),baseCost=chosen.reduce((s,x)=>s+x.cost,0),baseSaving=chosen.reduce((s,x)=>s+x.saving,0);
+$("totalCost").textContent=money(baseCost);$("totalSaving").textContent=money(baseSaving)+"/år";$("payback").textContent=baseSaving>0?(baseCost/baseSaving).toFixed(1).replace(".",",")+" år":"–";
+const overlap=Number($("overlapSlider").value)/100,budget=Number($("budgetSlider").value),period=Number($("periodSlider").value),hurdle=Number($("hurdleSlider").value);
+let cost=0,saving=0;
+for(const x of chosen){const f=scenario[x.id]||{cost:100,saving:100};cost+=x.cost*f.cost/100;saving+=x.saving*f.saving/100}
+saving*=1-overlap;
+const annuity=r=>r===0?period:(1-Math.pow(1+r,-period))/r;
 let irr=null;
-if(chosen.length>0&&totalInvestment===0&&effective>0){irr=Infinity}
-else if(totalInvestment>0&&effective>0){
-let low=-0.999,high=100;
-for(let i=0;i<100;i++){let mid=(low+high)/2;if(effective*annuity(mid)>totalInvestment)low=mid;else high=mid}
-irr=(low+high)/2*100;
-}
-const showIRR=irr===null?"–":!Number.isFinite(irr)?"Ej definierad":irr>100?"> 100 %":irr.toFixed(1).replace(".",",")+" %";
-$("irr").textContent=showIRR;$("hurdleResult").textContent=hurdle.toLocaleString("sv-SE")+" %";
-let pass=chosen.length>0&&irr!==null&&irr>=hurdle;
-$("verdict").textContent=chosen.length===0?"Välj åtgärder":pass?"✓ Paketet når avkastningskravet":"Paketet når inte avkastningskravet";
-$("verdict").className="lab-status"+(pass?" pass":"");
-$("totalNote").textContent=chosen.length===0?"Välj åtgärder för att börja experimentera.":(pass?"Med de valda antagandena når paketet kravet.":"Pröva en annan kombination eller justera antagandena för att se vad som krävs.");
-$("labCost").textContent=money(totalInvestment);$("labSaving").textContent=money(effective)+"/år";$("labPayback").textContent=effective>0?(totalInvestment/effective).toFixed(1).replace(".",",")+" år":"–";
+if(cost===0&&saving>0)irr=Infinity;
+else if(cost>0&&saving>0){let low=-0.999,high=100;for(let i=0;i<110;i++){const mid=(low+high)/2;if(saving*annuity(mid)>cost)low=mid;else high=mid}irr=(low+high)/2*100}
+const npv=saving*annuity(hurdle/100)-cost;
+$("irr").textContent=irr===null?"–":!Number.isFinite(irr)?"> 100 %":irr.toFixed(1).replace(".",",")+" %";
+$("labNpv").textContent=money(npv);$("hurdleResult").textContent=hurdle.toLocaleString("sv-SE")+" %";
+$("labCost").textContent=money(cost);$("labSaving").textContent=money(saving)+"/år";
+$("labPayback").textContent=saving>0?(cost/saving).toFixed(1).replace(".",",")+" år":"–";
 $("labCount").textContent=chosen.length+" åtgärder";
+const pass=chosen.length>0&&npv>=-0.00001;
+$("verdict").textContent=chosen.length===0?"Välj åtgärder":pass?"✓ Paketet klarar avkastningskravet":"Paketet klarar inte avkastningskravet";
+$("verdict").className="lab-status"+(pass?" pass":"");
+$("budgetStatus").textContent=chosen.length===0?"":cost<=budget?"✓ Paketet ryms inom budgeten.":"Budgeten överskrids med "+money(cost-budget)+".";
+$("budgetStatus").className="lab-explain "+(cost<=budget?"lab-budget-good":"lab-budget-bad");
+$("totalNote").textContent=chosen.length===0?"Välj åtgärder för att börja.":pass?"Med dessa antaganden är paketets nuvärde minst noll.":"Prova att kombinera andra åtgärder eller justera deras antaganden.";
 $("returnMeter").style.width=(irr===null?0:Math.min(100,Math.max(0,irr/25*100)))+"%";
 $("hurdleMarker").style.left=Math.min(100,hurdle/25*100)+"%";
-[["investValue",$("investSlider").value+" %"],["savingValue",$("savingSlider").value+" %"],["overlapValue",$("overlapSlider").value+" %"],["hurdleValue",hurdle.toLocaleString("sv-SE")+" %"],["periodValue",period+" år"]].forEach(([id,value])=>$(id).textContent=value);
-$("labMeasures").innerHTML=items.filter(x=>x.example||x.checked).map(x=>`<button class="lab-chip ${x.checked?"active":""}" data-lab-id="${x.id}" aria-pressed="${x.checked}"><b>${x.checked?"✓":"+"}</b> ${safe(x.name)}</button>`).join("")||'<span class="muted">Välj åtgärder i steg 1</span>';
+$("budgetValue").textContent=money(budget);$("overlapValue").textContent=$("overlapSlider").value+" %";
+$("hurdleValue").textContent=hurdle.toLocaleString("sv-SE")+" %";$("periodValue").textContent=period+" år";
+if(!skipActions)$("labMeasures").innerHTML=items.filter(x=>x.example||x.checked).map(x=>{
+const f=scenario[x.id]||{cost:100,saving:100},isOpen=labOpen.has(x.id);
+return `<div class="lab-action"><div class="lab-action-head"><input type="checkbox" data-lab-check="${x.id}" id="labm${x.id}" ${x.checked?"checked":""}><label for="labm${x.id}">${safe(x.name)}</label><button class="secondary" data-lab-open="${x.id}" aria-expanded="${isOpen}">${isOpen?"Stäng":"Justera"}</button></div><div class="lab-mini">${money(x.cost*f.cost/100)} · ${money(x.saving*f.saving/100)}/år</div>${isOpen?`<div class="lab-action-detail"><div class="lever"><div class="lever-label"><label for="lc${x.id}">Investering</label><output id="lcv${x.id}">${f.cost} % · ${money(x.cost*f.cost/100)}</output></div><input id="lc${x.id}" data-scenario-id="${x.id}" data-scenario-field="cost" type="range" min="50" max="150" step="5" value="${f.cost}"><div class="lever-ends"><span>−50 %</span><span>Grundvärde</span><span>+50 %</span></div></div><div class="lever"><div class="lever-label"><label for="ls${x.id}">Årlig besparing</label><output id="lsv${x.id}">${f.saving} % · ${money(x.saving*f.saving/100)}/år</output></div><input id="ls${x.id}" data-scenario-id="${x.id}" data-scenario-field="saving" type="range" min="50" max="150" step="5" value="${f.saving}"><div class="lever-ends"><span>−50 %</span><span>Grundvärde</span><span>+50 %</span></div></div></div>`:""}</div>`
+}).join("")||'<span class="muted">Välj åtgärder i steg 1.</span>';
 $("summary").innerHTML=chosen.length?chosen.map(x=>`<div class="summary-row"><span>${safe(x.name)}</span><span>${money(x.cost)}<br><span class="muted">${money(x.saving)}/år</span></span></div>`).join(""):'<div class="empty">Välj minst en åtgärd för att skapa ett paket.</div>';
 }
-function report(){let chosen=items.filter(x=>x.checked),cost=chosen.reduce((s,x)=>s+x.cost,0),saving=chosen.reduce((s,x)=>s+x.saving,0);return ["FunktionLab – Energiåtgärdspaket (förenklat scenario)",...chosen.map(x=>`${x.name}: investering ${money(x.cost)}, besparing ${money(x.saving)}/år, livslängd ${x.life} år`),`Total investering: ${money(cost)}`,`Summerad årlig besparing: ${money(saving)}`,`Enkel återbetalning: ${saving>0?(cost/saving).toFixed(1).replace(".",",")+" år":"–"}`,`Scenario: investering ${$("labCost").textContent}, justerad årlig besparing ${$("labSaving").textContent}`,`Paketets internränta: ${$("irr").textContent}; avkastningskrav: ${$("hurdleResult").textContent}; bedömning: ${$("verdict").textContent}`, "Observera: Scenarioreglagen påverkar labbets beräkningar. Besparingarna har inte automatiskt korrigerats för samverkan mellan åtgärder."].join("\n")}
+function updateLabTotalsOnly(){renderResults(true)}
+function report(){let chosen=items.filter(x=>x.checked),cost=chosen.reduce((s,x)=>s+x.cost,0),saving=chosen.reduce((s,x)=>s+x.saving,0);return ["FunktionLab – Energiåtgärdspaket (förenklat scenario)",...chosen.map(x=>`${x.name}: investering ${money(x.cost)}, besparing ${money(x.saving)}/år, livslängd ${x.life} år`),`Total investering: ${money(cost)}`,`Summerad årlig besparing: ${money(saving)}`,`Enkel återbetalning: ${saving>0?(cost/saving).toFixed(1).replace(".",",")+" år":"–"}`,`Experimenterat paket: investering ${$("labCost").textContent}, årlig besparing efter överlapp ${$("labSaving").textContent}, budget ${$("budgetValue").textContent}`,`Paketets internränta: ${$("irr").textContent}; avkastningskrav: ${$("hurdleResult").textContent}; bedömning: ${$("verdict").textContent}`, "Observera: Scenarioreglagen påverkar labbets beräkningar. Besparingarna har inte automatiskt korrigerats för samverkan mellan åtgärder."].join("\n")}
 function toast(s){$("toast").textContent=s;$("toast").style.display="block";setTimeout(()=>$("toast").style.display="none",2200)}
 document.addEventListener("change",e=>{let id=Number(e.target.dataset.check);if(id){items.find(x=>x.id===id).checked=e.target.checked;render();}else if(e.target.dataset.field){let x=items.find(x=>x.id===Number(e.target.dataset.id));x[e.target.dataset.field]=Math.max(e.target.dataset.field==="life"?1:0,Number(e.target.value)||0);render();}});
 document.addEventListener("click",e=>{let id=Number(e.target.dataset.edit);if(id){opened.has(id)?opened.delete(id):opened.add(id);render()}});
-$("search").addEventListener("input",render);$("category").addEventListener("change",render);$("rate").addEventListener("input",renderResults);["investSlider","savingSlider","overlapSlider","hurdleSlider","periodSlider"].forEach(id=>$(id).addEventListener("input",renderResults));
-$("labMeasures").addEventListener("click",e=>{let button=e.target.closest("[data-lab-id]");if(!button)return;let x=items.find(x=>x.id===Number(button.dataset.labId));if(x){x.checked=!x.checked;render()}});
-$("labReset").addEventListener("click",()=>{resetLevers();renderResults();toast("Reglagen återställda")});
+$("search").addEventListener("input",render);$("category").addEventListener("change",render);$("rate").addEventListener("input",renderResults);["budgetSlider","overlapSlider","hurdleSlider","periodSlider"].forEach(id=>$(id).addEventListener("input",renderResults));
+$("labMeasures").addEventListener("click",e=>{const b=e.target.closest("[data-lab-open]");if(!b)return;const id=Number(b.dataset.labOpen);labOpen.has(id)?labOpen.delete(id):labOpen.add(id);renderResults()});
+$("labMeasures").addEventListener("change",e=>{if(!e.target.dataset.labCheck)return;const x=items.find(x=>x.id===Number(e.target.dataset.labCheck));if(x){x.checked=e.target.checked;render()}});
+$("labMeasures").addEventListener("input",e=>{const t=e.target,id=Number(t.dataset.scenarioId);if(!id)return;scenario[id]??={cost:100,saving:100};scenario[id][t.dataset.scenarioField]=Number(t.value);const x=items.find(x=>x.id===id);const val=t.dataset.scenarioField==="cost"?x.cost:x.saving;const out=$(t.dataset.scenarioField==="cost"?"lcv"+id:"lsv"+id);if(out)out.textContent=t.value+" % · "+money(val*Number(t.value)/100)+(t.dataset.scenarioField==="saving"?"/år":"");const mini=t.closest(".lab-action").querySelector(".lab-mini");if(mini)mini.textContent=money(x.cost*scenario[id].cost/100)+" · "+money(x.saving*scenario[id].saving/100)+"/år";updateLabTotalsOnly()});
+$("labReset").addEventListener("click",()=>{resetLevers();renderResults();toast("Experimentet återställt")});
 $("toggleBank").addEventListener("click",()=>{let open=$("bank").hidden;$("bank").hidden=!open;$("bankTools").hidden=!open;$("toggleBank").setAttribute("aria-expanded",String(open));$("toggleBank").textContent=open?"− Stäng åtgärdsbanken":"+ Öppna åtgärdsbanken och välj fler";if(open)$("search").focus()});
 $("add").addEventListener("click",()=>{let name=$("newName").value.trim();if(!name){toast("Skriv åtgärdens namn först");return}let cost=Number($("newCost").value),saving=Number($("newSaving").value),life=Number($("newLife").value);if(![cost,saving,life].every(Number.isFinite)||cost<0||saving<0||life<1||life>80){toast("Kontrollera belopp och livslängd");return}let x=item(name,"Egna åtgärder",cost,saving,life,true);opened.add(x.id);["newName","newCost","newSaving"].forEach(id=>$(id).value="");$("search").value="";$("category").value="";render();toast("Åtgärden har lagts till")});
 $("reset").addEventListener("click",()=>{reset();toast("Exemplet är återställt")});$("clear").addEventListener("click",clearAll);

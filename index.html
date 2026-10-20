@@ -19,13 +19,19 @@ footer{font-size:12px;color:#8295a2;margin-top:30px}#toast{position:fixed;bottom
 <header><div class="brand">Funktion<span>Lab</span> <span style="font-size:12px;font-weight:500;color:#78909b">/ Energi</span></div><div class="top-actions"><button id="reset" class="secondary small">↻ Visa exempel igen</button><button id="clear" class="secondary small">Börja med egna uppgifter</button></div></header>
 <div class="intro"><div class="eyebrow">Efter energiutredningen</div><h1>Välj rätt energiåtgärder</h1><p>Välj åtgärderna som passar fastigheten, justera siffrorna från din energiutredning och se vad paketet innebär. Ett färdigt exempel visas direkt.</p></div>
 <section class="panel"><span class="step">STEG 1</span><h2>Välj åtgärder</h2><p class="muted">Bocka i det du vill genomföra. Tryck på ”Ändra” för att justera investering, besparing och livslängd.</p>
-<div class="bar"><input id="search" type="search" placeholder="Sök bland energiåtgärder…" aria-label="Sök åtgärder"><select id="category" aria-label="Filtrera kategori"><option value="">Alla områden</option></select><span class="muted" id="count"></span></div>
-<div id="measures"></div>
+<div class="bar" id="bankTools" hidden><input id="search" type="search" placeholder="Sök bland energiåtgärder…" aria-label="Sök åtgärder"><select id="category" aria-label="Filtrera kategori"><option value="">Alla områden</option></select><span class="muted" id="count"></span></div>
+<div id="chosenMeasures"></div><button id="toggleBank" class="secondary" aria-expanded="false" style="margin-top:14px">+ Öppna åtgärdsbanken och välj fler</button><div id="bank" hidden><div id="measures"></div></div>
 <div class="add"><h3>+ Lägg till åtgärd från din energiutredning</h3><div class="fieldgrid"><label style="grid-column:1/-1">Åtgärd<input id="newName" type="text" placeholder="T.ex. byte av cirkulationspump"></label><label>Investering (kr)<input id="newCost" type="number" min="0" placeholder="50000"></label><label>Besparing (kr/år)<input id="newSaving" type="number" min="0" placeholder="12000"></label><label>Livslängd (år)<input id="newLife" type="number" min="1" max="80" value="15"></label></div><button id="add" style="margin-top:12px">Lägg till åtgärd</button></div>
 </section>
 <section class="panel"><span class="step">STEG 2</span><h2>Se paketets ekonomi</h2><p class="muted">Resultatet uppdateras direkt när du väljer eller ändrar åtgärder.</p><div class="metrics"><div class="metric"><small>Investering</small><strong id="totalCost">–</strong></div><div class="metric"><small>Årlig besparing*</small><strong class="positive" id="totalSaving">–</strong></div><div class="metric"><small>Enkel återbetalningstid</small><strong id="payback">–</strong></div></div>
 <div id="warning" class="note"></div>
-<details class="advanced"><summary>Fördjupning: paketets lönsamhet</summary><p>En förenklad nuvärdeskalkyl som tar hänsyn till varje åtgärds livslängd. Detta är <strong>inte</strong> en verifierad Totalmetodikkalkyl.</p><label class="muted">Kalkylränta (%) <input id="rate" type="number" min="0" max="30" step="0.5" value="5" style="width:90px;margin-left:8px"></label><div class="summary-row"><span>Summa av enskilda nuvärden</span><span id="npv"></span></div><p>Beräkningen antar konstanta årliga besparingar och tar inte hänsyn till reinvesteringar, restvärden eller åtgärdernas samverkan.</p></details>
+<details class="advanced"><summary>Fördjupning: nuvärde</summary><p>En förenklad nuvärdeskalkyl som tar hänsyn till varje åtgärds livslängd. Detta är <strong>inte</strong> en verifierad Totalmetodikkalkyl.</p><label class="muted">Kalkylränta (%) <input id="rate" type="number" min="0" max="30" step="0.5" value="5" style="width:90px;margin-left:8px"></label><div class="summary-row"><span>Summa av enskilda nuvärden</span><span id="npv"></span></div><p>Beräkningen antar konstanta årliga besparingar och tar inte hänsyn till reinvesteringar, restvärden eller åtgärdernas samverkan.</p></details>
+</section>
+<section class="panel"><span class="step">TOTALMETODIKEN</span><h2>Bedöm hela åtgärdspaketet</h2><p class="muted">En förenklad paketkalkyl inspirerad av Beloks Totalmetodik. Bedöm om hela kombinationen når ditt avkastningskrav, även om enskilda åtgärder har olika lönsamhet.</p>
+<div class="fieldgrid" style="margin-top:18px"><label>Avkastningskrav (%)<input id="hurdle" type="number" min="0" max="40" step="0.5" value="6"></label><label>Kalkylperiod (år)<input id="period" type="number" min="1" max="60" value="15"></label><label>Justerad paketbesparing (kr/år)<input id="adjusted" type="number" min="0" placeholder="Automatisk summa"></label></div>
+<p class="muted">Lämna paketbesparingen tom för att använda summan av åtgärderna. Ange ett justerat värde om energiutredningen visar överlapp eller samverkan.</p>
+<div class="metrics"><div class="metric"><small>Paketets internränta</small><strong id="irr">–</strong></div><div class="metric"><small>Ditt avkastningskrav</small><strong id="hurdleResult">–</strong></div><div class="metric"><small>Bedömning</small><strong id="verdict">–</strong></div></div>
+<div id="totalNote" class="note"></div><details class="advanced"><summary>Vad betyder beräkningen?</summary><p>Internräntan beräknas för den totala investeringen och en konstant årlig nettobesparing under vald kalkylperiod. Positivt utfall innebär att paketets internränta når det angivna avkastningskravet. Modellen förenklar Beloks Totalmetodik: den hanterar inte automatiskt åtgärdernas beroenden, energiprisutveckling, restvärden, reinvesteringar eller skilda tekniska livslängder. En komplett Totalmetodikanalys kräver mer underlag.</p></details>
 </section>
 <section class="panel"><span class="step">STEG 3</span><h2>Ta med resultatet</h2><p class="muted">En enkel sammanställning av åtgärdspaketet, redo att diskutera eller komplettera inför beslut.</p><div id="summary"></div><div class="bar"><button id="copy" class="primary">Kopiera sammanställning</button><button id="print" class="secondary">Skriv ut / Spara som PDF</button></div></section>
 <footer>FunktionLab · Exempeldata är fiktiva. Resultatet är ett översiktligt beslutsstöd och ersätter inte en teknisk eller ekonomisk verifiering.</footer>
@@ -54,17 +60,19 @@ const library=[
 const $=id=>document.getElementById(id),fmt=n=>Math.round(n).toLocaleString("sv-SE"),money=n=>fmt(n)+" kr";
 let items=[],counter=0,opened=new Set();
 function item(name,category,cost=0,saving=0,life=15,checked=false,example=false){return {id:++counter,name,category,cost,saving,life,checked,example}}
-function reset(){counter=0;opened.clear();items=examples.map(x=>item(...x,true,true)).concat(library.map(x=>item(...x)));$("search").value="";$("category").value="";$("rate").value=5;render()}
-function clearAll(){counter=0;opened.clear();items=library.map(x=>item(...x));$("search").value="";$("category").value="";render();toast("Klart för dina egna uppgifter")}
+function reset(){counter=0;opened.clear();items=examples.map(x=>item(...x,true,true)).concat(library.map(x=>item(...x)));$("search").value="";$("category").value="";$("rate").value=5;$("hurdle").value=6;$("period").value=15;$("adjusted").value="";render()}
+function clearAll(){counter=0;opened.clear();items=library.map(x=>item(...x));$("search").value="";$("category").value="";$("adjusted").value="";render();toast("Klart för dina egna uppgifter")}
 function safe(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function measureHTML(x){return `<div class="measure"><input type="checkbox" data-check="${x.id}" id="m${x.id}" ${x.checked?"checked":""}><label for="m${x.id}"><strong>${safe(x.name)}</strong>${x.example?'<span class="pill">Exempel</span>':""}<div class="meta">${safe(x.category)}${x.cost||x.saving?` · ${money(x.cost)} · ${money(x.saving)}/år`:" · Fyll i värden"}</div></label><button class="edit secondary" data-edit="${x.id}" aria-expanded="${opened.has(x.id)}">Ändra</button></div><div class="details ${opened.has(x.id)?"open":""}" id="detail${x.id}"><div class="fieldgrid"><label>Investering (kr)<input type="number" min="0" data-field="cost" data-id="${x.id}" value="${x.cost}"></label><label>Besparing (kr/år)<input type="number" min="0" data-field="saving" data-id="${x.id}" value="${x.saving}"></label><label>Livslängd (år)<input type="number" min="1" max="80" data-field="life" data-id="${x.id}" value="${x.life}"></label></div></div>`}
 function render(){
 const categories=[...new Set(items.map(x=>x.category))].sort();let current=$("category").value;
 $("category").innerHTML='<option value="">Alla områden</option>'+categories.map(x=>`<option value="${safe(x)}">${safe(x)}</option>`).join("");
 $("category").value=categories.includes(current)?current:"";
 let q=$("search").value.toLocaleLowerCase("sv"),cat=$("category").value;
-let shown=items.filter(x=>(!cat||x.category===cat)&&(!q||x.name.toLocaleLowerCase("sv").includes(q)||x.category.toLocaleLowerCase("sv").includes(q)));
+let shown=items.filter(x=>!x.checked&&(!cat||x.category===cat)&&(!q||x.name.toLocaleLowerCase("sv").includes(q)||x.category.toLocaleLowerCase("sv").includes(q)));
 $("count").textContent=`${items.filter(x=>x.checked).length} valda`;
-$("measures").innerHTML=shown.length?shown.map(x=>`<div class="measure"><input type="checkbox" data-check="${x.id}" id="m${x.id}" ${x.checked?"checked":""}><label for="m${x.id}"><strong>${safe(x.name)}</strong>${x.example?'<span class="pill">Exempel</span>':""}<div class="meta">${safe(x.category)}${x.cost||x.saving?` · ${money(x.cost)} · ${money(x.saving)}/år`:" · Fyll i värden"}</div></label><button class="edit secondary" data-edit="${x.id}" aria-expanded="${opened.has(x.id)}">Ändra</button></div><div class="details ${opened.has(x.id)?"open":""}" id="detail${x.id}"><div class="fieldgrid"><label>Investering (kr)<input type="number" min="0" data-field="cost" data-id="${x.id}" value="${x.cost}"></label><label>Besparing (kr/år)<input type="number" min="0" data-field="saving" data-id="${x.id}" value="${x.saving}"></label><label>Livslängd (år)<input type="number" min="1" max="80" data-field="life" data-id="${x.id}" value="${x.life}"></label></div></div>`).join(""):'<div class="empty">Inga åtgärder matchar sökningen.</div>';
+$("chosenMeasures").innerHTML=items.filter(x=>x.checked).length?items.filter(x=>x.checked).map(x=>measureHTML(x)).join(""):'<div class="empty">Inga åtgärder valda ännu. Öppna åtgärdsbanken nedan.</div>';
+$("measures").innerHTML=shown.length?shown.map(x=>measureHTML(x)).join(""):'<div class="empty">Inga fler åtgärder matchar sökningen.</div>';
 renderResults();
 }
 function renderResults(){
@@ -76,13 +84,33 @@ $("warning").textContent=overlap?"* Kontrollera samverkan: valda åtgärder kan 
 const rate=Math.max(0,Math.min(30,Number($("rate").value)||0))/100;
 let npv=chosen.reduce((s,x)=>s-x.cost+(rate===0?x.life:(1-Math.pow(1+rate,-x.life))/rate)*x.saving,0);
 $("npv").textContent=money(npv);
+let adjusted=$("adjusted").value.trim(),effective=adjusted===""?saving:Math.max(0,Number(adjusted)||0);
+let period=Math.max(1,Math.min(60,Number($("period").value)||15));
+let hurdle=Math.max(0,Math.min(40,Number($("hurdle").value)||0));
+let annuity=r=>r===0?period:(1-Math.pow(1+r,-period))/r;
+let irr=null;
+if(cost===0&&effective>0){irr=Infinity}
+else if(cost>0&&effective>0){
+let low=-0.999,high=100;
+for(let i=0;i<100;i++){let mid=(low+high)/2;if(effective*annuity(mid)>cost)low=mid;else high=mid}
+irr=(low+high)/2*100;
+}
+$("irr").textContent=irr===null?"–":!Number.isFinite(irr)?"> 100 %":irr.toFixed(1).replace(".",",")+" %";
+$("hurdleResult").textContent=hurdle.toLocaleString("sv-SE")+" %";
+let pass=irr!==null&&irr>=hurdle;
+$("verdict").textContent=chosen.length===0?"Välj åtgärder":pass?"Når kravet":"Under kravet";
+$("verdict").style.color=pass?"#07816e":"#a36823";
+$("totalNote").className=pass?"note success":"note";
+$("totalNote").textContent=chosen.length===0?"Välj åtgärder för att bedöma paketet.":(pass?"Paketet når det angivna avkastningskravet i denna förenklade kalkyl.":"Paketet når inte det angivna avkastningskravet i denna förenklade kalkyl.")+" Kontrollera åtgärdernas samverkan och att vald kalkylperiod är rimlig.";
+
 $("summary").innerHTML=chosen.length?chosen.map(x=>`<div class="summary-row"><span>${safe(x.name)}</span><span>${money(x.cost)}<br><span class="muted">${money(x.saving)}/år</span></span></div>`).join(""):'<div class="empty">Välj minst en åtgärd för att skapa ett paket.</div>';
 }
-function report(){let chosen=items.filter(x=>x.checked),cost=chosen.reduce((s,x)=>s+x.cost,0),saving=chosen.reduce((s,x)=>s+x.saving,0);return ["FunktionLab – Energiåtgärdspaket",...chosen.map(x=>`${x.name}: investering ${money(x.cost)}, besparing ${money(x.saving)}/år, livslängd ${x.life} år`),`Total investering: ${money(cost)}`,`Summerad årlig besparing: ${money(saving)}`,`Enkel återbetalning: ${saving>0?(cost/saving).toFixed(1).replace(".",",")+" år":"–"}`,"Observera: Besparingarna har inte korrigerats för samverkan mellan åtgärder."].join("\n")}
+function report(){let chosen=items.filter(x=>x.checked),cost=chosen.reduce((s,x)=>s+x.cost,0),saving=chosen.reduce((s,x)=>s+x.saving,0);return ["FunktionLab – Energiåtgärdspaket",...chosen.map(x=>`${x.name}: investering ${money(x.cost)}, besparing ${money(x.saving)}/år, livslängd ${x.life} år`),`Total investering: ${money(cost)}`,`Summerad årlig besparing: ${money(saving)}`,`Enkel återbetalning: ${saving>0?(cost/saving).toFixed(1).replace(".",",")+" år":"–"}`,`Paketets internränta: ${$("irr").textContent}; avkastningskrav: ${$("hurdleResult").textContent}; bedömning: ${$("verdict").textContent}`, "Observera: Besparingarna har inte automatiskt korrigerats för samverkan mellan åtgärder."].join("\n")}
 function toast(s){$("toast").textContent=s;$("toast").style.display="block";setTimeout(()=>$("toast").style.display="none",2200)}
-$("measures").addEventListener("change",e=>{let id=Number(e.target.dataset.check);if(id){items.find(x=>x.id===id).checked=e.target.checked;renderResults();$("count").textContent=`${items.filter(x=>x.checked).length} valda`;}else if(e.target.dataset.field){let x=items.find(x=>x.id===Number(e.target.dataset.id));x[e.target.dataset.field]=Math.max(e.target.dataset.field==="life"?1:0,Number(e.target.value)||0);render();}});
-$("measures").addEventListener("click",e=>{let id=Number(e.target.dataset.edit);if(id){opened.has(id)?opened.delete(id):opened.add(id);render()}});
-$("search").addEventListener("input",render);$("category").addEventListener("change",render);$("rate").addEventListener("input",renderResults);
+document.addEventListener("change",e=>{let id=Number(e.target.dataset.check);if(id){items.find(x=>x.id===id).checked=e.target.checked;renderResults();$("count").textContent=`${items.filter(x=>x.checked).length} valda`;}else if(e.target.dataset.field){let x=items.find(x=>x.id===Number(e.target.dataset.id));x[e.target.dataset.field]=Math.max(e.target.dataset.field==="life"?1:0,Number(e.target.value)||0);render();}});
+document.addEventListener("click",e=>{let id=Number(e.target.dataset.edit);if(id){opened.has(id)?opened.delete(id):opened.add(id);render()}});
+$("search").addEventListener("input",render);$("category").addEventListener("change",render);$("rate").addEventListener("input",renderResults);["hurdle","period","adjusted"].forEach(id=>$(id).addEventListener("input",renderResults));
+$("toggleBank").addEventListener("click",()=>{let open=$("bank").hidden;$("bank").hidden=!open;$("bankTools").hidden=!open;$("toggleBank").setAttribute("aria-expanded",String(open));$("toggleBank").textContent=open?"− Stäng åtgärdsbanken":"+ Öppna åtgärdsbanken och välj fler";if(open)$("search").focus()});
 $("add").addEventListener("click",()=>{let name=$("newName").value.trim();if(!name){toast("Skriv åtgärdens namn först");return}let cost=Number($("newCost").value),saving=Number($("newSaving").value),life=Number($("newLife").value);if(![cost,saving,life].every(Number.isFinite)||cost<0||saving<0||life<1||life>80){toast("Kontrollera belopp och livslängd");return}let x=item(name,"Egna åtgärder",cost,saving,life,true);opened.add(x.id);["newName","newCost","newSaving"].forEach(id=>$(id).value="");$("search").value="";$("category").value="";render();toast("Åtgärden har lagts till")});
 $("reset").addEventListener("click",()=>{reset();toast("Exemplet är återställt")});$("clear").addEventListener("click",clearAll);
 $("copy").addEventListener("click",async()=>{let text=report();try{await navigator.clipboard.writeText(text);toast("Sammanställningen kopierad")}catch(e){let t=document.createElement("textarea");t.value=text;document.body.appendChild(t);t.select();try{document.execCommand("copy");toast("Sammanställningen kopierad")}catch(e){toast("Kopiering stöds inte här")}t.remove()}});

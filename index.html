@@ -98,7 +98,7 @@ let chosen=items.filter(x=>x.checked),cost=chosen.reduce((s,x)=>s+x.cost,0),savi
 $("totalCost").textContent=money(cost);$("totalSaving").textContent=money(saving)+"/år";$("payback").textContent=saving>0?(cost/saving).toFixed(1).replace(".",",")+" år":"–";
 let cats=new Set(chosen.map(x=>x.category));let overlap=(cats.has("Ventilation")&&cats.has("Värme"))||(cats.has("Klimatskal")&&cats.has("Värme"))||(cats.has("Belysning")&&cats.has("Värme"))||(chosen.filter(x=>x.category==="Ventilation").length>1);
 $("warning").className=overlap?"note":"note success";
-$("warning").textContent=overlap?"* Kontrollera samverkan: valda åtgärder kan påverka samma energianvändning. Besparingarna nedan är summerade utan korrigering och kan därför vara överskattade.":"* Besparingarna är summerade från dina uppgifter. Kontrollera alltid antagandena innan beslut.";
+$("warning").textContent=overlap?"* Kontrollera samverkan: valda åtgärder kan påverka samma energianvändning. Grundvärdena nedan är summerade utan korrigering.":"* Grundvärdena summeras från dina uppgifter. Scenarioreglagen påverkar bara Åtgärdslabbet.";
 const rate=Math.max(0,Math.min(30,Number($("rate").value)||0))/100;
 let npv=chosen.reduce((s,x)=>s-x.cost+(rate===0?x.life:(1-Math.pow(1+rate,-x.life))/rate)*x.saving,0);
 $("npv").textContent=money(npv);
@@ -107,15 +107,15 @@ let totalInvestment=cost*investFactor,effective=saving*savingFactor*(1-overlapFa
 let period=Number($("periodSlider").value),hurdle=Number($("hurdleSlider").value);
 let annuity=r=>r===0?period:(1-Math.pow(1+r,-period))/r;
 let irr=null;
-if(totalInvestment===0&&effective>0){irr=Infinity}
+if(chosen.length>0&&totalInvestment===0&&effective>0){irr=Infinity}
 else if(totalInvestment>0&&effective>0){
 let low=-0.999,high=100;
 for(let i=0;i<100;i++){let mid=(low+high)/2;if(effective*annuity(mid)>totalInvestment)low=mid;else high=mid}
 irr=(low+high)/2*100;
 }
-const showIRR=irr===null?"–":!Number.isFinite(irr)?"> 100 %":irr.toFixed(1).replace(".",",")+" %";
+const showIRR=irr===null?"–":!Number.isFinite(irr)?"Ej definierad":irr>100?"> 100 %":irr.toFixed(1).replace(".",",")+" %";
 $("irr").textContent=showIRR;$("hurdleResult").textContent=hurdle.toLocaleString("sv-SE")+" %";
-let pass=irr!==null&&irr>=hurdle;
+let pass=chosen.length>0&&irr!==null&&irr>=hurdle;
 $("verdict").textContent=chosen.length===0?"Välj åtgärder":pass?"✓ Paketet når avkastningskravet":"Paketet når inte avkastningskravet";
 $("verdict").className="lab-status"+(pass?" pass":"");
 $("totalNote").textContent=chosen.length===0?"Välj åtgärder för att börja experimentera.":(pass?"Med de valda antagandena når paketet kravet.":"Pröva en annan kombination eller justera antagandena för att se vad som krävs.");
@@ -127,9 +127,9 @@ $("hurdleMarker").style.left=Math.min(100,hurdle/25*100)+"%";
 $("labMeasures").innerHTML=items.filter(x=>x.example||x.checked).map(x=>`<button class="lab-chip ${x.checked?"active":""}" data-lab-id="${x.id}" aria-pressed="${x.checked}"><b>${x.checked?"✓":"+"}</b> ${safe(x.name)}</button>`).join("")||'<span class="muted">Välj åtgärder i steg 1</span>';
 $("summary").innerHTML=chosen.length?chosen.map(x=>`<div class="summary-row"><span>${safe(x.name)}</span><span>${money(x.cost)}<br><span class="muted">${money(x.saving)}/år</span></span></div>`).join(""):'<div class="empty">Välj minst en åtgärd för att skapa ett paket.</div>';
 }
-function report(){let chosen=items.filter(x=>x.checked),cost=chosen.reduce((s,x)=>s+x.cost,0),saving=chosen.reduce((s,x)=>s+x.saving,0);return ["FunktionLab – Energiåtgärdspaket",...chosen.map(x=>`${x.name}: investering ${money(x.cost)}, besparing ${money(x.saving)}/år, livslängd ${x.life} år`),`Total investering: ${money(cost)}`,`Summerad årlig besparing: ${money(saving)}`,`Enkel återbetalning: ${saving>0?(cost/saving).toFixed(1).replace(".",",")+" år":"–"}`,`Scenario: investering ${$("labCost").textContent}, justerad årlig besparing ${$("labSaving").textContent}`,`Paketets internränta: ${$("irr").textContent}; avkastningskrav: ${$("hurdleResult").textContent}; bedömning: ${$("verdict").textContent}`, "Observera: Besparingarna har inte automatiskt korrigerats för samverkan mellan åtgärder."].join("\n")}
+function report(){let chosen=items.filter(x=>x.checked),cost=chosen.reduce((s,x)=>s+x.cost,0),saving=chosen.reduce((s,x)=>s+x.saving,0);return ["FunktionLab – Energiåtgärdspaket (förenklat scenario)",...chosen.map(x=>`${x.name}: investering ${money(x.cost)}, besparing ${money(x.saving)}/år, livslängd ${x.life} år`),`Total investering: ${money(cost)}`,`Summerad årlig besparing: ${money(saving)}`,`Enkel återbetalning: ${saving>0?(cost/saving).toFixed(1).replace(".",",")+" år":"–"}`,`Scenario: investering ${$("labCost").textContent}, justerad årlig besparing ${$("labSaving").textContent}`,`Paketets internränta: ${$("irr").textContent}; avkastningskrav: ${$("hurdleResult").textContent}; bedömning: ${$("verdict").textContent}`, "Observera: Scenarioreglagen påverkar labbets beräkningar. Besparingarna har inte automatiskt korrigerats för samverkan mellan åtgärder."].join("\n")}
 function toast(s){$("toast").textContent=s;$("toast").style.display="block";setTimeout(()=>$("toast").style.display="none",2200)}
-document.addEventListener("change",e=>{let id=Number(e.target.dataset.check);if(id){items.find(x=>x.id===id).checked=e.target.checked;renderResults();$("count").textContent=`${items.filter(x=>x.checked).length} valda`;}else if(e.target.dataset.field){let x=items.find(x=>x.id===Number(e.target.dataset.id));x[e.target.dataset.field]=Math.max(e.target.dataset.field==="life"?1:0,Number(e.target.value)||0);render();}});
+document.addEventListener("change",e=>{let id=Number(e.target.dataset.check);if(id){items.find(x=>x.id===id).checked=e.target.checked;render();}else if(e.target.dataset.field){let x=items.find(x=>x.id===Number(e.target.dataset.id));x[e.target.dataset.field]=Math.max(e.target.dataset.field==="life"?1:0,Number(e.target.value)||0);render();}});
 document.addEventListener("click",e=>{let id=Number(e.target.dataset.edit);if(id){opened.has(id)?opened.delete(id):opened.add(id);render()}});
 $("search").addEventListener("input",render);$("category").addEventListener("change",render);$("rate").addEventListener("input",renderResults);["investSlider","savingSlider","overlapSlider","hurdleSlider","periodSlider"].forEach(id=>$(id).addEventListener("input",renderResults));
 $("labMeasures").addEventListener("click",e=>{let button=e.target.closest("[data-lab-id]");if(!button)return;let x=items.find(x=>x.id===Number(button.dataset.labId));if(x){x.checked=!x.checked;render()}});

@@ -1883,20 +1883,20 @@ reset();
 const root=document.getElementById('talaskriv-view');if(!root)return;
 const el=id=>document.getElementById(id),area=el('ts-text'),start=el('ts-start'),stop=el('ts-stop'),status=el('ts-status'),interim=el('ts-interim'),shell=root.querySelector('.ts-shell');
 const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
-let rec=null,state='idle',base='',committed='',session=0,watchdog=null;
-const safari=/Safari\//.test(navigator.userAgent)&&!/CriOS|FxiOS|EdgiOS/.test(navigator.userAgent);
+let rec=null,state='idle',base='',committed='',session=0,watchdog=null,lastError='';
+
 const clearWatchdog=()=>{if(watchdog){clearTimeout(watchdog);watchdog=null;}};
 const setStatus=t=>status.textContent=t;
 const count=()=>el('ts-count').textContent=(area.value.trim().match(/\S+/g)||[]).length+' ord';
 const controls=()=>{start.disabled=state!=='idle'||!SpeechRecognition;stop.disabled=state!=='listening'&&state!=='starting';shell.classList.toggle('ts-recording',state==='listening');};
 area.addEventListener('input',()=>{count();if(state==='listening'){base=area.value;committed='';}});count();
 function finish(message){clearWatchdog();rec=null;state='idle';interim.textContent='';base=area.value;committed='';controls();if(message)setStatus(message);}
-function begin(){if(state!=='idle'||!SpeechRecognition)return;state='starting';controls();base=area.value;committed='';interim.textContent='';const id=++session;const r=new SpeechRecognition();rec=r;r.lang='sv-SE';r.continuous=!safari;r.interimResults=true;
+function begin(){if(state!=='idle'||!SpeechRecognition)return;lastError='';state='starting';controls();base=area.value;committed='';interim.textContent='';const id=++session;const r=new SpeechRecognition();rec=r;r.lang='sv-SE';r.continuous=true;r.interimResults=true;
 r.onstart=()=>{if(id!==session)return;clearWatchdog();if(state==='stopping'){try{r.stop()}catch(_){}return;}state='listening';controls();setStatus('Lyssnar…');};
 r.onresult=e=>{if(id!==session||state==='stopping')return;let draft='';for(let i=e.resultIndex;i<e.results.length;i++){const phrase=e.results[i][0].transcript.trim();if(e.results[i].isFinal){committed+=(committed?' ':'')+phrase;}else draft+=(draft?' ':'')+phrase;}area.value=base+(base&&committed?' ':'')+committed;interim.textContent=draft?'Pågående: '+draft:'';count();};
-r.onerror=e=>{if(id!==session)return;const msg=(e.error==='not-allowed'||e.error==='service-not-allowed')?'Mikrofonen nekades. Kontrollera behörigheterna.':e.error==='no-speech'?'Inget tal uppfattades. Försök igen.':'Taligenkänning misslyckades: '+e.error;setStatus(msg);};
-r.onend=()=>{if(id!==session)return;const message=state==='stopping'?'Dikteringen stoppad.':status.textContent==='Lyssnar…'?'Dikteringen avslutades. Tryck på Starta för att fortsätta.':null;finish(message);};
-try{r.start();setStatus('Startar mikrofonen…');watchdog=setTimeout(()=>{if(id!==session||state!=='starting')return;session++;try{r.abort()}catch(_){}finish('Starten tog för lång tid. Försök igen.');},8000);}catch(e){finish('Kunde inte starta mikrofonen. Försök igen.');}}
+r.onerror=e=>{if(id!==session)return;const msg=(e.error==='not-allowed'||e.error==='service-not-allowed')?'Mikrofonen nekades. Kontrollera behörigheterna.':e.error==='no-speech'?'Inget tal uppfattades. Försök igen.':'Taligenkänning misslyckades: '+e.error;lastError=msg;setStatus(msg);};
+r.onend=()=>{if(id!==session)return;const message=state==='stopping'?'Dikteringen stoppad.':lastError||'Safari avslutade lyssningen. Tryck på Starta för att fortsätta.';finish(message);};
+try{r.start();setStatus('Startar mikrofonen…');watchdog=setTimeout(()=>{if(id!==session||state!=='starting')return;session++;try{r.abort()}catch(_){}finish('Starten tog för lång tid. Försök igen.');},8000);}catch(e){finish('Kunde inte starta taligenkänningen: '+(e&&e.name?e.name:'okänt fel')+'. Ladda om sidan om Safari har låst mikrofonen.');}}
 if(!SpeechRecognition)setStatus('Taligenkänning stöds inte i den här webbläsaren. Du kan fortfarande skriva och kopiera text.');
 start.addEventListener('click',begin);
 stop.addEventListener('click',()=>{if(state!=='starting'&&state!=='listening')return;state='stopping';controls();setStatus('Stoppar…');const id=session;const active=rec;clearWatchdog();watchdog=setTimeout(()=>{if(id!==session||state!=='stopping')return;session++;try{active.abort()}catch(_){}finish('Dikteringen stoppad. Du kan starta igen.');},1500);try{active.stop()}catch(e){session++;finish('Dikteringen stoppad. Du kan starta igen.');}});

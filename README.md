@@ -1,1 +1,1 @@
-# FunktionLab-Test
+FunktionLab v8: enhetlig responsiv layout. Öppna index.html. Den valda logotypen visas endast i sidhuvudet. Alla 12 kort finns kvar, samt befintlig verktygslogik. Testa i Safari via webbserver för slutlig verifiering.
